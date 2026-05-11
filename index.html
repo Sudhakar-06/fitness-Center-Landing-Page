@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE — Elite Fitness Coaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --gold: #d4a843;
+    --orange: #e85d26;
+    --gray: #1c1c1c;
+    --muted: #6b6560;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(212,168,67,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.08s linear, width 0.2s, height 0.2s;
+    transform: translate(-50%, -50%);
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 48px;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.9), transparent);
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    color: var(--white);
+  }
+  .logo span { color: var(--gold); }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  nav ul a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    padding: 10px 24px;
+    font-weight: 600 !important;
+    letter-spacing: 1px !important;
+    transition: background 0.3s !important;
+  }
+  .nav-cta:hover { background: var(--orange) !important; color: var(--white) !important; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 48px 80px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 70% 40%, rgba(232,93,38,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 30% 60%, rgba(212,168,67,0.08) 0%, transparent 60%),
+      linear-gradient(160deg, #0a0a0a 0%, #111008 100%);
+  }
+  .hero-number {
+    position: absolute;
+    top: 50%; right: -40px;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 280px;
+    color: rgba(255,255,255,0.02);
+    letter-spacing: -10px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-label::before {
+    content: '';
+    display: block; width: 32px; height: 1px;
+    background: var(--gold);
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  h1 em {
+    font-style: normal;
+    -webkit-text-stroke: 1px var(--white);
+    color: transparent;
+  }
+  h1 .accent { color: var(--orange); }
+  .hero-sub {
+    margin-top: 32px;
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-actions {
+    margin-top: 48px;
+    display: flex; align-items: center; gap: 24px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 18px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--orange);
+    transform: translateX(-101%);
+    transition: transform 0.3s ease;
+  }
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-ghost {
+    color: var(--white);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.3s;
+  }
+  .btn-ghost::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+  .btn-ghost:hover { color: var(--gold); }
+  .btn-ghost:hover::after { transform: translateX(4px); }
+
+  /* STATS STRIP */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .stat {
+    padding: 40px 48px;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    animation: fadeUp 0.6s ease both;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+
+  /* SECTION */
+  section { padding: 120px 48px; }
+  .section-label {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  /* PROGRAMS */
+  .programs { background: var(--gray); }
+  .programs-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 64px;
+  }
+  .program-card {
+    background: var(--black);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+    cursor: none;
+  }
+  .program-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .program-card:hover::before { transform: scaleX(1); }
+  .program-card:hover { transform: translateY(-4px); }
+  .program-icon {
+    font-size: 36px; margin-bottom: 24px;
+    display: block;
+  }
+  .program-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .program-card p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+  .program-price {
+    margin-top: 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px; color: var(--gold);
+  }
+  .program-price span { font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--muted); }
+  .program-tag {
+    position: absolute; top: 24px; right: 24px;
+    background: var(--orange);
+    color: var(--white);
+    font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 24px; margin-top: 64px;
+  }
+  .testimonial {
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 40px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .testimonial:hover { border-color: var(--gold); }
+  .testimonial::before {
+    content: '"';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: var(--gold);
+    opacity: 0.3;
+    position: absolute; top: 10px; left: 32px;
+    line-height: 1;
+  }
+  .testimonial-text {
+    font-size: 15px; line-height: 1.8;
+    color: rgba(245,240,232,0.8);
+    margin-bottom: 24px;
+    padding-top: 20px;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 14px; }
+  .author-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 16px; color: var(--black);
+  }
+  .author-name { font-weight: 600; font-size: 14px; }
+  .author-detail { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .stars { color: var(--gold); font-size: 12px; letter-spacing: 2px; }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: var(--gold);
+    color: var(--black);
+    text-align: center;
+    padding: 120px 48px;
+  }
+  .cta-section .section-label { justify-content: center; }
+  .cta-section .section-label::before { display: none; }
+  .cta-section h2 { color: var(--black); }
+  .cta-section p { color: rgba(10,10,10,0.6); max-width: 500px; margin: 20px auto 0; font-size: 16px; line-height: 1.7; }
+  .btn-dark {
+    display: inline-block;
+    margin-top: 48px;
+    background: var(--black);
+    color: var(--white);
+    padding: 20px 52px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-dark:hover { background: var(--orange); }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    padding: 60px 48px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  footer p { color: var(--muted); font-size: 13px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav ul { display: none; }
+    nav, section { padding-left: 24px; padding-right: 24px; }
+    .hero { padding: 0 24px 60px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .programs-grid, .testimonials-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .stat { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="logo">FOR<span>G</span>E</div>
+  <ul>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#cta" class="nav-cta">Start Now</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-number">01</div>
+  <div class="hero-content">
+    <div class="hero-label">Elite Fitness Coaching</div>
+    <h1>BUILD<br><em>YOUR</em><br><span class="accent">BEST</span></h1>
+    <p class="hero-sub">Science-backed training. Ruthless accountability. Real results. Join 500+ athletes who've transformed their body and performance with FORGE.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary"><span>Claim Your Free Call</span></a>
+      <a href="#results" class="btn-ghost">See transformations</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat reveal">
+    <div class="stat-num">500+</div>
+    <div class="stat-label">Athletes Coached</div>
+  </div>
+  <div class="stat reveal">
+    <div class="stat-num">12K</div>
+    <div class="stat-label">Lbs Lost Total</div>
+  </div>
+  <div class="stat reveal">
+    <div class="stat-num">97%</div>
+    <div class="stat-label">Client Retention</div>
+  </div>
+  <div class="stat reveal">
+    <div class="stat-num">8yr</div>
+    <div class="stat-label">Experience</div>
+  </div>
+</div>
+
+<section class="programs" id="programs">
+  <div class="section-label">Training Programs</div>
+  <h2>CHOOSE<br>YOUR PATH</h2>
+  <div class="programs-grid">
+    <div class="program-card reveal">
+      <span class="program-icon">⚡</span>
+      <h3>Shred & Lean</h3>
+      <p>A 12-week fat loss program combining HIIT, strength circuits, and nutrition coaching. Built for those who want to look as athletic as they feel.</p>
+      <div class="program-price">$297 <span>/ month</span></div>
+    </div>
+    <div class="program-card reveal" style="transition-delay:0.1s">
+      <div class="program-tag">Most Popular</div>
+      <span class="program-icon">🔥</span>
+      <h3>Elite Performance</h3>
+      <p>Full-stack coaching — custom programming, weekly check-ins, macro planning, and 24/7 direct access. For the serious athlete only.</p>
+      <div class="program-price">$497 <span>/ month</span></div>
+    </div>
+    <div class="program-card reveal" style="transition-delay:0.2s">
+      <span class="program-icon">💪</span>
+      <h3>Power & Mass</h3>
+      <p>Progressive overload-focused strength training for those chasing serious muscle. 16-week periodised program with video technique analysis.</p>
+      <div class="program-price">$347 <span>/ month</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="section-label">Client Results</div>
+  <h2>REAL<br>PEOPLE. REAL<br>RESULTS.</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial reveal">
+      <p class="testimonial-text">Lost 34 lbs in 16 weeks without feeling like I was starving. The programming was smart, the accountability was relentless, and the results speak for themselves.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">MK</div>
+        <div>
+          <div class="author-name">Marcus K.</div>
+          <div class="author-detail">Lost 34lbs — Elite Performance</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial reveal" style="transition-delay:0.1s">
+      <p class="testimonial-text">I've tried 4 coaches before FORGE. None of them came close. My deadlift went from 140kg to 195kg in 6 months. The programming is next level.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">SR</div>
+        <div>
+          <div class="author-name">Sarah R.</div>
+          <div class="author-detail">Deadlift +55kg — Power & Mass</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial reveal">
+      <p class="testimonial-text">As a busy mum of three, I thought peak shape was behind me. 12 weeks later, I'm the fittest I've ever been. Worth every penny.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">JL</div>
+        <div>
+          <div class="author-name">Jennifer L.</div>
+          <div class="author-detail">Shred & Lean — 12 weeks</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial reveal" style="transition-delay:0.1s">
+      <p class="testimonial-text">The nutrition coaching alone changed how I think about food forever. Down 22lbs and actually maintaining it. This is how it's supposed to work.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">DJ</div>
+        <div>
+          <div class="author-name">Daniel J.</div>
+          <div class="author-detail">Lost 22lbs — Elite Performance</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="cta">
+  <div class="section-label">Limited Spots Available</div>
+  <h2>READY TO<br>FORGE YOUR<br>BEST SELF?</h2>
+  <p>Book your free 20-minute strategy call. We'll map out exactly what you need to hit your goal — no pressure, no pitch.</p>
+  <a href="#" class="btn-dark">Book Free Strategy Call →</a>
+</section>
+
+<footer>
+  <div class="logo">FOR<span>G</span>E</div>
+  <p>© 2025 FORGE Coaching. All rights reserved.</p>
+  <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;">Instagram · TikTok · YouTube</p>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
